@@ -27,9 +27,11 @@ function SiteManagement() {
         setFilteredUsers([]);
       }
       else {
-        const suggestions = users.filter(user =>
-          `${user.firstname} ${user.lastname}`.toLowerCase().includes(value.toLowerCase())
-        );
+        const suggestions = users.filter(user => {
+          // Support both 'lastname' and 'lastName' from API
+          const last = user.lastName || user.lastname || '';
+          return `${user.firstname} ${last}`.toLowerCase().includes(value.toLowerCase());
+        });
         setFilteredUsers(suggestions);
       }
     } else {
@@ -38,7 +40,8 @@ function SiteManagement() {
   };
 
   const handleSelectUser = (user) => {
-    const fullName = `${user.firstname} ${user.lastname}`;
+  const last = user.lastName || user.lastname || '';
+  const fullName = `${user.firstname} ${last}`;
     setNewSite({ ...newSite, manager: fullName, userid: user.userid });
     setFilteredUsers([]);
   };
@@ -54,25 +57,29 @@ function SiteManagement() {
     e.preventDefault();
     if (!newSite.sitename || !newSite.location || !newSite.manager) return;
 
-    const isValidManager = users.some(
-      user =>
-        `${user.firstname} ${user.lastname}`.toLowerCase() === newSite.manager.toLowerCase()
-    );
+    // Find the selected user by matching the manager name
+    const selectedUser = users.find(user => {
+      const last = user.lastName || user.lastname || '';
+      return `${user.firstname} ${last}`.toLowerCase() === newSite.manager.toLowerCase();
+    });
 
-    if (!isValidManager) {
+    if (!selectedUser) {
       alert("Please select a manager from the suggestions list.");
       return;
     }
+
+    // Always set userid from the selected user
+    const siteData = { ...newSite, Userid: selectedUser.userid };
 
     showLoader();
     try {
       let response;
       if (isEditMode) {
         // Update existing site
-        response = await UpdateSite(editingSiteId, newSite);
+        response = await UpdateSite(editingSiteId, siteData);
       } else {
         // Add new site
-        response = await AddSite(newSite);
+        response = await AddSite(siteData);
       }
 
       if (response.status !== 200) {
@@ -80,11 +87,26 @@ function SiteManagement() {
         return;
       }
 
+
       // Refresh the list
       const allSites = await FetchAllSite();
-      if (allSites.data) {
-        setSites(allSites.data);
-      }
+      let updatedSites = allSites.data || [];
+
+      // For each site, if userid exists, attach firstname and lastname from users
+      updatedSites = updatedSites.map(site => {
+        if (site.userid) {
+          const user = users.find(u => u.userid === site.userid);
+          if (user) {
+            return {
+              ...site,
+              firstname: user.firstname,
+              lastname: user.lastName || user.lastname || '',
+            };
+          }
+        }
+        return site;
+      });
+      setSites(updatedSites);
 
       // Reset form
       setNewSite({ sitename: '', location: '', manager: '', userid: '', isActive: false });
@@ -103,27 +125,22 @@ function SiteManagement() {
     site.sitename.toLowerCase().includes(searchTerm.toLowerCase()) || site.location.toLowerCase().includes(searchTerm.toLowerCase()) || site.firstname.toLowerCase().includes(searchTerm.toLowerCase()) || site.lastname.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  useEffect(() => {
-    let didLoad = false;
 
+  // Fetch users once when component mounts
+  useEffect(() => {
     const loadUsers = async () => {
-      if (didLoad || !showModal) return; // prevent multiple calls
-      didLoad = true;
       try {
         showLoader();
-        const rolestofetch = 2;
-        const response = await fetchUsers(rolestofetch);
-        setUsers(response.data.result || []);
+        const response = await fetchUsers();
+        setUsers(response.data || []);
       } catch (err) {
-        console.error('Error loading users:', err);
         console.error('Error loading users:', err);
       } finally {
         hideLoader();
       }
     };
-
     loadUsers();
-  }, [showModal]);
+  }, []);
 
   useEffect(() => {
     let didLoad = false;
@@ -243,11 +260,14 @@ function SiteManagement() {
                   />
                   {filteredUsers.length > 0 && (
                     <ul className="autocomplete-dropdown">
-                      {filteredUsers.map(user => (
-                        <li key={user.userid} onClick={() => handleSelectUser(user)}>
-                          {user.firstname} {user.lastname}
-                        </li>
-                      ))}
+                      {filteredUsers.map(user => {
+                        const last = user.lastName || user.lastname || '';
+                        return (
+                          <li key={user.userid} onClick={() => handleSelectUser(user)}>
+                            {user.firstname} {last}
+                          </li>
+                        );
+                      })}
                     </ul>
                   )}
                 </div>

@@ -1,7 +1,8 @@
+
 import axios from './axiosInstance';
-export const fetchUsers = (Roleid) => {
-    return axios.get(`/user/getuserwithroleid?Roleid=${Roleid}`);
-  };
+export const fetchUsers = () => {
+  return axios.get('/role/all-users');
+};
 
   export const AddSite = (data) => axios.post('/site/add', data);
   export const FetchAllSite = () => {

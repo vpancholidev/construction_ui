@@ -96,7 +96,7 @@ function EmployeeManagement() {
     employeeData.organisationId = orgData.organisationId;
     try {
       if (editMode) {
-        await UpdateEmployee(selectedEmployeeId, employeeData);
+        await UpdateEmployee(selectedEmployeeId,employeeData);
       } else {
         await AddEmployee(employeeData);
       }
@@ -271,7 +271,7 @@ function EmployeeManagement() {
                   value={employeeData.lastName}
                   onChange={handleChange}
                 />
-                <select name="role" value={employeeData.roleid} onChange={handleChange}>
+                <select name="roleid" value={employeeData.roleid} onChange={handleChange}>
                   <option value="">Select Role</option>
                   {roles.map((role) => (
                     <option key={role.roleid} value={role.roleid}>
