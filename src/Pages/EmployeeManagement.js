@@ -20,7 +20,7 @@ function EmployeeManagement() {
 
   const [employeeData, setEmployeeData] = useState({
     firstname: '',
-    lastname: '',
+    lastName: '',
     role: '',
     contact: '',
     Wageperday: '',
@@ -40,7 +40,7 @@ function EmployeeManagement() {
   const handleOpenModal = () => {
     setEmployeeData({
       firstname: '',
-      lastname: '',
+      lastName: '',
       role: '',
       contact: '',
       Wageperday: '',
@@ -57,7 +57,7 @@ function EmployeeManagement() {
   const handleEditClick = (emp) => {
     setEmployeeData({
       firstname: emp.firstname || '',
-      lastname: emp.lastname || '',
+      lastName: emp.lastName || '',
       role: emp.roleid || emp.role || '', // prefer roleid if available
       contact: emp.contact || '',
       Wageperday: emp.Wageperday || emp.wageperday || '', // handle both cases
@@ -78,7 +78,7 @@ function EmployeeManagement() {
 
     const isValid =
       employeeData.firstname &&
-      employeeData.lastname &&
+      employeeData.lastName &&
       employeeData.contact &&
       employeeData.Wageperday &&
       employeeData.address &&
@@ -116,7 +116,7 @@ function EmployeeManagement() {
       setShowModal(false);
       setEmployeeData({
         firstname: '',
-        lastname: '',
+        lastName: '',
         role: '',
         contact: '',
         Wageperday: '',
@@ -266,7 +266,7 @@ function EmployeeManagement() {
                 />
                 <input
                   type="text"
-                  name="lastname"
+                  name="lastName"
                   placeholder="Last Name"
                   value={employeeData.lastName}
                   onChange={handleChange}
