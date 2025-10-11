@@ -1,0 +1,22 @@
+/* src/components/DashboardCard.css */
+.dashboard-card {
+    flex: 1;
+    padding: 1rem;
+    border-radius: 10px;
+    color: white;
+    min-width: 150px;
+    margin: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  .dashboard-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  
+  .dashboard-card p {
+    font-size: 2rem;
+    margin: 0.5rem 0 0;
+  }
+  

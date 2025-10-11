@@ -1,0 +1,43 @@
+.role-container {
+    padding: 2rem;
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .role-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .role-form input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .role-form button {
+    padding: 10px 20px;
+    background-color: #008080;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .error-msg {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  .role-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .role-list li {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+  }
+  

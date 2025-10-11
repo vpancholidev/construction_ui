@@ -1,0 +1,79 @@
+.generate-receipt-container {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 30px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.generate-receipt-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.top-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.top-buttons button {
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.top-buttons button:hover {
+  background-color: #1b5e20;
+}
+
+.receipt-form input,
+.receipt-form select,
+.receipt-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.receipt-form textarea {
+  min-height: 80px;
+}
+
+.receipt-form button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background-color: #2e7d32;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.receipt-form button:hover {
+  background-color: #1b5e20;
+}
+
+.total-amount {
+  font-weight: bold;
+  text-align: center;
+  margin: 15px 0;
+  font-size: 18px;
+}
+.top-buttons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px; /* 👈 this adds space between buttons */
+  margin-bottom: 20px;
+}
