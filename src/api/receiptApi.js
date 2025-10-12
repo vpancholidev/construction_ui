@@ -1,11 +1,11 @@
 import axios from './axiosInstance';
 
 export const FetchSites = () => {
-  return axios.get(`/sites/GetAllSite`);
+  return axios.get(`/site/GetAllSite`);
 };
 
 export const FetchSuppliers = () => {
-  return axios.get(`/suppliers`);
+  return axios.get(`/supplier/getAll`);
 };
 
 export const AddSuppliers = (data) => {
