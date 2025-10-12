@@ -104,3 +104,107 @@
     align-items: stretch;
   }
 }
+
+/* Modal base */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 10px;
+  width: 720px;
+  max-width: 100%;
+  padding: 20px 22px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+  box-sizing: border-box;
+}
+
+/* Title */
+.modal h3 {
+  margin: 0 0 14px 0;
+  font-size: 1.25rem;
+}
+
+/* Two-column responsive grid for fields */
+.modal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* two equal columns */
+  gap: 12px 14px; /* row-gap col-gap */
+  align-items: center;
+}
+
+/* If you need a wider single field row (e.g. address), provide a full-width helper */
+.grid-full {
+  grid-column: 1 / -1;
+}
+
+/* Inputs styling */
+.modal input[type="text"],
+.modal input[type="email"],
+.modal input[type="tel"],
+.modal textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #d0d7de;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+/* smaller font for helper text inside table or below */
+.modal .helper {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Modal actions */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Buttons */
+.modal-actions button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.modal-actions button.save {
+  background-color: #1976d2;
+  color: #fff;
+}
+
+.modal-actions button.cancel {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+/* Responsive fallback: single column on smaller screens */
+@media (max-width: 640px) {
+  .modal {
+    padding: 14px;
+  }
+  .modal-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .modal-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .modal-actions button {
+    width: 100%;
+  }
+}
