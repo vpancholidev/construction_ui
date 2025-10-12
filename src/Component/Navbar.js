@@ -31,6 +31,7 @@ function Navbar() {
             <li><Link to="/sites" onClick={() => setMenuOpen(false)}>Site Management</Link></li>
             <li><Link to="/employees" onClick={() => setMenuOpen(false)}>Employees</Link></li>
             <li><Link to="/generate-receipt" onClick={() => setMenuOpen(false)}>Generate Receipt</Link></li>
+            <li><Link to="/MaterialManagement" onClick={() => setMenuOpen(false)}>Material Management</Link></li>
           </>
         )}
         {userdata?.role === 'Supervisor' && (

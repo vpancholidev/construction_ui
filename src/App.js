@@ -12,7 +12,7 @@ import ProtectedRouteByRole from './Component/ProtectedRouteByRole';
 import Unauthorized from './Pages/Unauthorized';
 import GenerateReceipt from './Component/GenerateReceipt'; // Assuming you have a GenerateReceipt component
 import RoleManagement from './Component/RoleManagement'; // Assuming you have a RoleManagement component
-
+import MaterialManagement from './Pages/MaterialManagement';
 function App() {
   return (
     <Router>
@@ -36,6 +36,7 @@ function App() {
           <Route path="/sites" element={<SiteManagement />} />
           <Route path="/generate-receipt" element={<GenerateReceipt />} />
           <Route path="/RoleManagement" element={<RoleManagement />} />
+          <Route path='/MaterialManagement' element={<MaterialManagement/>}/>
         </Route>
         </Routes>
       </div>

@@ -1,29 +1,33 @@
 .generate-receipt-container {
-  max-width: 600px;
-  margin: 30px auto;
-  padding: 30px;
-  background: #fff;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 2rem;
+  max-width: 800px;
+  margin: 40px auto; /* centers the container */
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   font-family: 'Segoe UI', sans-serif;
 }
 
+/* Page Title */
 .generate-receipt-container h2 {
   text-align: center;
-  margin-bottom: 20px;
+  color: #2e7d32;
+  margin-bottom: 1.5rem;
 }
 
+/* Top Action Buttons */
 .top-buttons {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-bottom: 1.5rem;
 }
 
 .top-buttons button {
   background-color: #2e7d32;
   color: white;
   border: none;
-  padding: 10px 18px;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
@@ -33,24 +37,40 @@
   background-color: #1b5e20;
 }
 
+/* Form Layout */
+.receipt-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .receipt-form input,
 .receipt-form select,
 .receipt-form textarea {
   width: 100%;
   padding: 10px;
-  margin-top: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 1rem;
   box-sizing: border-box;
 }
 
 .receipt-form textarea {
   min-height: 80px;
+  resize: vertical;
 }
 
+/* Total Display */
+.total-amount {
+  font-weight: bold;
+  text-align: center;
+  margin: 10px 0;
+  font-size: 18px;
+  color: #1565c0;
+}
+
+/* Submit Button */
 .receipt-form button {
-  margin-top: 20px;
-  width: 100%;
   padding: 12px;
   background-color: #2e7d32;
   color: white;
@@ -65,15 +85,22 @@
   background-color: #1b5e20;
 }
 
-.total-amount {
-  font-weight: bold;
-  text-align: center;
-  margin: 15px 0;
-  font-size: 18px;
+/* Error Message Styling */
+.error-msg {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: -5px;
 }
-.top-buttons {
-  display: flex;
-  justify-content: flex-start;
-  gap: 10px; /* 👈 this adds space between buttons */
-  margin-bottom: 20px;
+
+/* Responsive */
+@media (max-width: 768px) {
+  .generate-receipt-container {
+    padding: 1.2rem;
+    margin: 20px;
+  }
+
+  .top-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }

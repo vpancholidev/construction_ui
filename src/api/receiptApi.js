@@ -1,19 +1,21 @@
-import axios from 'axios';
-
-const API_BASE_URL = 'http://localhost:5000/api'; // Update this URL as needed
+import axios from './axiosInstance';
 
 export const FetchSites = () => {
-  return axios.get(`${API_BASE_URL}/sites`);
+  return axios.get(`/sites/GetAllSite`);
 };
 
 export const FetchSuppliers = () => {
-  return axios.get(`${API_BASE_URL}/suppliers`);
+  return axios.get(`/suppliers`);
+};
+
+export const AddSuppliers = (data) => {
+  return axios.post(`/supplier/add`,data);
 };
 
 export const FetchMaterialTypes = () => {
-  return axios.get(`${API_BASE_URL}/materials`);
+  return axios.get(`/materials`);
 };
 
 export const SaveReceipt = (data) => {
-  return axios.post(`${API_BASE_URL}/receipts`, data);
+  return axios.post(`/receipts`, data);
 };

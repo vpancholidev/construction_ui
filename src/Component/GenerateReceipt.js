@@ -108,14 +108,67 @@ function GenerateReceipt() {
   
   const [receiptLink, setReceiptLink] = useState('');
 
- 
+  // Extract fetching suppliers into its own function so we can call it on demand
+  const fetchSuppliers = async () => {
+    showLoader();
+    try {
+      const sups = await FetchSuppliers();
+      setSuppliers(sups.data || []);
+    } catch (err) {
+      console.error('Error loading suppliers:', err);
+    } finally {
+      hideLoader();
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      showLoader();
+      try {
+        const [mats, sups, siteList] = await Promise.all([
+          FetchMaterialTypes(),
+          FetchSuppliers(),
+          FetchSites()
+        ]);
+
+        setMaterialTypes(mats.data || []);
+        setSuppliers(sups.data || []);
+        setSites(siteList.data || []);
+      } catch (err) {
+        console.error('Error loading data:', err);
+      } finally {
+        hideLoader();
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Called by SupplierModal when a supplier is successfully created.
+  // "created" may be null if API didn't return the created object.
+  const handleSupplierAdded = async (created) => {
+    // simplest approach: reload the supplier list from server
+    await fetchSuppliers();
+
+    // if API returned created supplier with id, auto-select it in the form
+    const createdId = created?.supplierId ?? created?.id ?? created?.SupplierId ?? created?.Id;
+    const createdName = created?.supplierName ?? created?.name ?? created?.SupplierName;
+
+    if (createdId) {
+      setForm(prev => ({ ...prev, supplierId: createdId }));
+    } else if (createdName) {
+      // fallback: try to find by name and select first match
+      const match = (suppliers || []).find(s => (s.supplierName ?? s.name ?? s.SupplierName)?.toLowerCase() === createdName.toLowerCase());
+      if (match) setForm(prev => ({ ...prev, supplierId: match.id ?? match.supplierId ?? match.SupplierId }));
+    }
+  };
 
   return (
     <>
   <Navbar />
-    <div className="receipt-container">
+    <div className="generate-receipt-container">
       <h2>Generate Receipt</h2>
-      <div className="top-buttons" style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+      <div className="top-buttons">
         <button onClick={() => setShowMaterialModal(true)}>+ Add Material Type</button>
          <br></br>
         <button onClick={() => setShowSupplierModal(true)}>+ Add Supplier</button>
