@@ -5,7 +5,7 @@ export const FetchSites = () => {
 };
 
 export const FetchSuppliers = () => {
-  return axios.get(`/supplier/getAll`);
+  return axios.get(`/supplier/getAllSupplier`);
 };
 
 export const AddSuppliers = (data) => {

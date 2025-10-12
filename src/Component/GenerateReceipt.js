@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback ,useRef  } from 'react';
 import './GenerateReceipt.css';
 import { FetchMaterialTypes, FetchSuppliers, FetchSites, SaveReceipt } from '../api/receiptApi';
 import MaterialModal from './MaterialModal';
@@ -8,6 +8,7 @@ import Navbar from '../Component/Navbar';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function GenerateReceipt() {
+  const didInitRef = useRef(false);
   const { showLoader, hideLoader } = useLoader();
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,35 +44,33 @@ function GenerateReceipt() {
       hideLoader();
     }
   }, [showLoader, hideLoader]);
+ 
+ useEffect(() => {
+  if (didInitRef.current) return;
+  didInitRef.current = true;
 
-  // Initial load: materials, suppliers, sites
-  useEffect(() => {
-    let mounted = true;
+  const fetchData = async () => {
+    showLoader();
+    try {
+      const [sups, siteList] = await Promise.all([
+    //    FetchMaterialTypes(),
+        FetchSuppliers(),
+        FetchSites()
+      ]);
+   // setMaterialTypes(mats?.data || []);
+    setSuppliers(sups?.data || []);
+    setSites(siteList?.data || []);
+    console.log('Fetched sites:', siteList?.data || []);
+    } catch (err) {
+      console.error('Error loading data:', err);
+    } finally {
+      hideLoader();
+    }
+  };
 
-    const fetchData = async () => {
-      showLoader();
-      try {
-        const [mats, sups, siteList] = await Promise.all([
-          FetchMaterialTypes(),
-          FetchSuppliers(),
-          FetchSites()
-        ]);
-
-        if (!mounted) return;
-        setMaterialTypes(mats?.data || []);
-        setSuppliers(sups?.data || []);
-        setSites(siteList?.data || []);
-      } catch (err) {
-        console.error('Error loading data:', err);
-      } finally {
-        hideLoader();
-      }
-    };
-
-    fetchData();
-
-    return () => { mounted = false; };
-  }, [showLoader, hideLoader]);
+  fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
 
   // Handle createdSupplierId param (when coming back from supplier page)
   useEffect(() => {
@@ -202,11 +201,11 @@ function GenerateReceipt() {
 
           <select name="siteId" value={form.siteId} onChange={handleChange}>
             <option value="">Select Site</option>
-            {sites.map((site) => (
-              <option key={site.id ?? site.siteId} value={site.id ?? site.siteId}>
-                {site.name ?? site.siteName}
-              </option>
-            ))}
+  {sites.map(site => (
+    <option key={site.siteId} value={site.siteId}>
+      {site.sitename}
+    </option>
+  ))}
           </select>
 
           <input type="date" name="receiptDate" value={form.receiptDate} onChange={handleChange} />
