@@ -12,6 +12,10 @@ export const AddSuppliers = (data) => {
   return axios.post(`/supplier/add`,data);
 };
 
+export const UpdateSupplier = async (payload) => {
+  return await axios.put('/Supplier/UpdateSupplier', payload);
+};
+
 export const FetchMaterialTypes = () => {
   return axios.get(`/materials`);
 };
