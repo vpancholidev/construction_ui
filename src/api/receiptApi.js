@@ -16,10 +16,15 @@ export const UpdateSupplier = async (payload) => {
   return await axios.put('/Supplier/UpdateSupplier', payload);
 };
 
-export const FetchMaterialTypes = () => {
-  return axios.get(`/materials`);
-};
-
 export const SaveReceipt = (data) => {
   return axios.post(`/receipts`, data);
 };
+
+export const FetchMaterialTypes = () =>
+  axios.get(`/Material/GetAll`);
+
+export const AddMaterialType = (payload) =>
+  axios.post(`/Material/Add`, payload);
+
+export const UpdateMaterialType = (payload) =>
+  axios.put(`/Material/Update`, payload);

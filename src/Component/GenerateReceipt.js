@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useCallback ,useRef  } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './GenerateReceipt.css';
 import { FetchMaterialTypes, FetchSuppliers, FetchSites, SaveReceipt } from '../api/receiptApi';
-import MaterialModal from './MaterialModal';
 import SupplierModal from './SupplierModal';
 import { useLoader } from '../Context/LoaderContext';
 import Navbar from '../Component/Navbar';
@@ -27,52 +26,113 @@ function GenerateReceipt() {
     note: ''
   });
 
-  const [showMaterialModal, setShowMaterialModal] = useState(false);
+  // removed material modal states (we use separate page)
   const [showSupplierModal, setShowSupplierModal] = useState(false);
 
   const [receiptLink, setReceiptLink] = useState('');
 
-  // Reusable supplier fetcher (can be called from other places)
+  // fetch helpers
   const fetchSuppliers = useCallback(async () => {
     showLoader();
     try {
       const res = await FetchSuppliers();
       setSuppliers(res?.data || []);
+      return res?.data || [];
     } catch (err) {
       console.error('Error loading suppliers:', err);
+      return [];
     } finally {
       hideLoader();
     }
   }, [showLoader, hideLoader]);
- 
- useEffect(() => {
-  if (didInitRef.current) return;
-  didInitRef.current = true;
 
-  const fetchData = async () => {
+  const fetchMaterialTypes = useCallback(async () => {
     showLoader();
     try {
-      const [sups, siteList] = await Promise.all([
-    //    FetchMaterialTypes(),
-        FetchSuppliers(),
-        FetchSites()
-      ]);
-   // setMaterialTypes(mats?.data || []);
-    setSuppliers(sups?.data || []);
-    setSites(siteList?.data || []);
-    console.log('Fetched sites:', siteList?.data || []);
+      const res = await FetchMaterialTypes();
+      setMaterialTypes(res?.data || []);
+      return res?.data || [];
     } catch (err) {
-      console.error('Error loading data:', err);
+      console.error('Error loading material types:', err);
+      return [];
     } finally {
       hideLoader();
     }
-  };
+  }, [showLoader, hideLoader]);
 
-  fetchData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
+  const fetchSites = useCallback(async () => {
+    showLoader();
+    try {
+      const res = await FetchSites();
+      setSites(res?.data || []);
+      return res?.data || [];
+    } catch (err) {
+      console.error('Error loading sites:', err);
+      return [];
+    } finally {
+      hideLoader();
+    }
+  }, [showLoader, hideLoader]);
 
-  // Handle createdSupplierId param (when coming back from supplier page)
+  // initial load (guarded to avoid double calls in StrictMode)
+  useEffect(() => {
+    if (didInitRef.current) return;
+    didInitRef.current = true;
+
+    let mounted = true;
+    const fetchData = async () => {
+      showLoader();
+      try {
+        const [matsRes, supsRes, siteListRes] = await Promise.all([
+          FetchMaterialTypes(),
+          FetchSuppliers(),
+          FetchSites()
+        ]);
+
+        if (!mounted) return;
+
+        setMaterialTypes(matsRes?.data || []);
+        setSuppliers(supsRes?.data || []);
+        setSites(siteListRes?.data || []);
+      } catch (err) {
+        console.error('Error loading data:', err);
+      } finally {
+        hideLoader();
+      }
+    };
+
+    fetchData();
+    return () => { mounted = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // handle createdMaterialId param when returning from material page
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const createdMaterialId = params.get('createdMaterialId');
+    if (!createdMaterialId) return;
+
+    (async () => {
+      // refresh material list and preselect
+      const list = await fetchMaterialTypes();
+      // attempt to find created id in the freshly fetched list
+      const found = (list || []).find(m =>
+        String(m.materialTypeId ?? m.id ?? m.MaterialTypeId ?? m.Id) === String(createdMaterialId)
+      );
+      if (found) {
+        const id = found.materialTypeId ?? found.id ?? found.MaterialTypeId ?? found.Id;
+        setForm(prev => ({ ...prev, materialId: String(id) }));
+      } else {
+        // set raw created id anyway
+        setForm(prev => ({ ...prev, materialId: String(createdMaterialId) }));
+      }
+      // remove query param
+      navigate(location.pathname, { replace: true });
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
+
+  // handle createdSupplierId param when returning from supplier page
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const createdSupplierId = params.get('createdSupplierId');
@@ -80,36 +140,32 @@ function GenerateReceipt() {
 
     (async () => {
       await fetchSuppliers();
-      // set the supplier id (string) in form
-      setForm(prev => ({ ...prev, supplierId: createdSupplierId }));
-      // remove query param without reloading
+      setForm(prev => ({ ...prev, supplierId: String(createdSupplierId) }));
       navigate(location.pathname, { replace: true });
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
-  // Called when a supplier is added (modal flow)
+  // Supplier modal flow callback
   const handleSupplierAdded = async (created) => {
-    // reload suppliers to get the authoritative list
-    await fetchSuppliers();
-
-    // try to determine id from created response
+    // If API returned created supplier, append/select it; otherwise reload list
     const createdId = created?.supplierId ?? created?.id ?? created?.SupplierId ?? created?.Id;
     const createdName = created?.supplierName ?? created?.name ?? created?.SupplierName;
 
-    if (createdId) {
-      setForm(prev => ({ ...prev, supplierId: createdId }));
+    if (createdId && createdName) {
+      // optimistic append
+      setSuppliers(prev => [{ supplierId: createdId, supplierName: createdName, ...created }, ...prev]);
+      setForm(prev => ({ ...prev, supplierId: String(createdId) }));
       return;
     }
 
+    // fallback to full reload
+    const list = await fetchSuppliers();
     if (createdName) {
-      // try to find by name in latest suppliers list
-      const match = (suppliers || []).find(s =>
-        ((s.supplierName ?? s.name ?? s.SupplierName) || '').toLowerCase() === createdName.toLowerCase()
-      );
+      const match = (list || []).find(s => ((s.supplierName ?? s.name ?? s.SupplierName) || '').toLowerCase() === createdName.toLowerCase());
       if (match) {
         const matchId = match.supplierId ?? match.id ?? match.SupplierId ?? match.Id;
-        setForm(prev => ({ ...prev, supplierId: matchId }));
+        setForm(prev => ({ ...prev, supplierId: String(matchId) }));
       }
     }
   };
@@ -162,6 +218,19 @@ function GenerateReceipt() {
     });
   };
 
+  // helper to render material options safely
+  const renderMaterialOptions = () => {
+    return materialTypes.map((m) => {
+      const id = m.materialTypeId ?? m.id ?? m.MaterialTypeId ?? m.Id;
+      const name = m.materialName ?? m.name ?? m.MaterialName ?? 'Unknown';
+      return (
+        <option key={String(id)} value={String(id)}>
+          {name}
+        </option>
+      );
+    });
+  };
+
   return (
     <>
       <Navbar />
@@ -169,7 +238,14 @@ function GenerateReceipt() {
         <h2>Generate Receipt</h2>
 
         <div className="top-buttons">
-          <button onClick={() => setShowMaterialModal(true)}>+ Add Material Type</button>
+          <button
+            onClick={() =>
+              navigate(`/materials/create?returnTo=${encodeURIComponent(location.pathname)}`)
+            }
+          >
+            + Add Material Type
+          </button>
+
           <button
             onClick={() =>
               navigate(`/suppliers/create?returnTo=${encodeURIComponent(location.pathname)}`)
@@ -184,11 +260,7 @@ function GenerateReceipt() {
 
           <select name="materialId" value={form.materialId} onChange={handleChange}>
             <option value="">Select Material</option>
-            {materialTypes.map((mat) => (
-              <option key={mat.id ?? mat.materialId} value={mat.id ?? mat.materialId}>
-                {mat.name ?? mat.materialName}
-              </option>
-            ))}
+            {renderMaterialOptions()}
           </select>
 
           <select name="supplierId" value={form.supplierId} onChange={handleChange}>
@@ -201,11 +273,11 @@ function GenerateReceipt() {
 
           <select name="siteId" value={form.siteId} onChange={handleChange}>
             <option value="">Select Site</option>
-  {sites.map(site => (
-    <option key={site.siteId} value={site.siteId}>
-      {site.sitename}
-    </option>
-  ))}
+            {sites.map(site => (
+              <option key={site.siteId ?? site.id} value={site.siteId ?? site.id}>
+                {site.sitename ?? site.name ?? site.siteName}
+              </option>
+            ))}
           </select>
 
           <input type="date" name="receiptDate" value={form.receiptDate} onChange={handleChange} />
@@ -214,7 +286,7 @@ function GenerateReceipt() {
           <button type="submit">Generate Receipt</button>
         </form>
 
-        {showMaterialModal && <MaterialModal onClose={() => setShowMaterialModal(false)} />}
+        {/* Supplier modal still supported (optional modal flow) */}
         {showSupplierModal &&
           <SupplierModal
             onSave={handleSupplierAdded}
