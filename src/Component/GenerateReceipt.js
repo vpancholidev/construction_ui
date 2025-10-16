@@ -29,6 +29,7 @@ export default function GenerateReceipt() {
   const [receipts, setReceipts] = useState([]);
   const { orgData } = useOrg();
 
+  // form state
   const [form, setForm] = useState({
     receiptDate: new Date().toISOString().slice(0, 10),
     materialId: '',
@@ -43,6 +44,9 @@ export default function GenerateReceipt() {
 
   const [editing, setEditing] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
+
+  // NEW: search state (for supplier filter)
+  const [searchSupplierId, setSearchSupplierId] = useState('');
 
   // Fetchers
   const fetchMaterialTypes = useCallback(async () => {
@@ -102,11 +106,19 @@ export default function GenerateReceipt() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Helper lookups
   const getMaterialName = (id) => {
     const m = materialTypes.find(
       (mt) => String(mt.materialTypeId ?? mt.id ?? mt.MaterialTypeId ?? mt.Id) === String(id)
     );
     return m ? (m.materialName ?? m.name ?? m.MaterialName ?? 'Unknown') : id;
+  };
+
+  const getSupplierName = (id) => {
+    const s = suppliers.find(
+      (sup) => String(sup.supplierId ?? sup.id ?? sup.SupplierId ?? sup.Id) === String(id)
+    );
+    return s ? (s.supplierName ?? s.name ?? s.SupplierName ?? 'Unknown') : id;
   };
 
   const handleChange = (e) => {
@@ -122,8 +134,9 @@ export default function GenerateReceipt() {
     });
   };
 
+  // Add / Edit handlers (kept same as before)
   const handleAdd = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     if (!form.materialId) return toast.error('Select material');
     if (!form.quantity || Number(form.quantity) <= 0) return toast.error('Enter quantity > 0');
 
@@ -219,35 +232,47 @@ export default function GenerateReceipt() {
     }
   };
 
+  // NEW: compute filtered receipts based on supplier search
+  const filteredReceipts = searchSupplierId
+    ? receipts.filter((r) =>
+        String(r.supplierId ?? r.SupplierId ?? r.supplierid ?? '') === String(searchSupplierId)
+      )
+    : receipts;
+
+  // Render helpers
   const renderMaterialOptions = () =>
     materialTypes.map((m) => (
-      <option
-        key={String(m.materialTypeId ?? m.id ?? m.MaterialTypeId ?? m.Id)}
-        value={String(m.materialTypeId ?? m.id ?? m.MaterialTypeId ?? m.Id)}
-      >
+      <option key={String(m.materialTypeId ?? m.id ?? m.MaterialTypeId ?? m.Id)} value={String(m.materialTypeId ?? m.id ?? m.MaterialTypeId ?? m.Id)}>
         {m.materialName ?? m.name ?? m.MaterialName}
       </option>
     ));
 
   const renderSupplierOptions = () =>
     suppliers.map((s) => (
-      <option
-        key={String(s.supplierId ?? s.id ?? s.SupplierId ?? s.Id)}
-        value={String(s.supplierId ?? s.id ?? s.SupplierId ?? s.Id)}
-      >
+      <option key={String(s.supplierId ?? s.id ?? s.SupplierId ?? s.Id)} value={String(s.supplierId ?? s.id ?? s.SupplierId ?? s.Id)}>
         {s.supplierName ?? s.name ?? s.SupplierName}
       </option>
     ));
 
   const renderSiteOptions = () =>
     sites.map((s) => (
-      <option
-        key={String(s.siteId ?? s.id ?? s.SiteId ?? s.Id)}
-        value={String(s.siteId ?? s.id ?? s.SiteId ?? s.Id)}
-      >
+      <option key={String(s.siteId ?? s.id ?? s.SiteId ?? s.Id)} value={String(s.siteId ?? s.id ?? s.SiteId ?? s.Id)}>
         {s.siteName ?? s.sitename ?? s.name ?? s.SiteName}
       </option>
     ));
+
+  // NEW: handlers for search controls
+  const handleSearch = () => {
+    // client-side filtering is already done by computed filteredReceipts
+    // if you want server-side search, call fetchReceiptsList with query params here
+    if (!searchSupplierId) {
+      toast.info('Please select a supplier to search');
+    }
+  };
+
+  const handleResetSearch = () => {
+    setSearchSupplierId('');
+  };
 
   return (
     <>
@@ -300,6 +325,17 @@ export default function GenerateReceipt() {
           <button type="submit">Add Receipt</button>
         </form>
 
+        {/* NEW: Search controls for receipts by supplier */}
+        <div style={{ marginTop: 18, display: 'flex', gap: 8, alignItems: 'center' }}>
+          <label style={{ fontWeight: 600, marginRight: 8 }}>Search by Supplier:</label>
+          <select value={searchSupplierId} onChange={(e) => setSearchSupplierId(e.target.value)}>
+            <option value="">-- All Suppliers --</option>
+            {renderSupplierOptions()}
+          </select>
+          <button onClick={handleSearch} style={{ padding: '8px 12px' }}>Search</button>
+          <button onClick={handleResetSearch} style={{ padding: '8px 12px' }}>Reset</button>
+        </div>
+
         {/* Receipts list */}
         <div style={{ marginTop: 20 }}>
           <h3>Existing Receipts</h3>
@@ -312,11 +348,12 @@ export default function GenerateReceipt() {
                 <th>Rate</th>
                 <th>Amount</th>
                 <th>Payment</th>
+                <th>Supplier</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {receipts.map((r) => (
+              {filteredReceipts.map((r) => (
                 <tr key={r.receiptId}>
                   <td>{(r.receiptDate || '').split('T')[0]}</td>
                   <td>{getMaterialName(r.materialId)}</td>
@@ -324,89 +361,97 @@ export default function GenerateReceipt() {
                   <td>{r.rate}</td>
                   <td>{r.amount}</td>
                   <td>{r.paymentStatus}</td>
+                  <td>{getSupplierName(r.supplierId)}</td>
                   <td>
                     <button onClick={() => openEdit(r)}>Edit</button>
                   </td>
                 </tr>
               ))}
+              {filteredReceipts.length === 0 && (
+                <tr>
+                  <td colSpan={8} style={{ textAlign: 'center', padding: 12, color: '#666' }}>
+                    No receipts found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
 
-       {/* Edit modal */}
-{editModalOpen && (
-  <div className="modal-overlay">
-    <div className="modal modal--wide" role="dialog" aria-modal="true" aria-labelledby="edit-receipt-title">
-      <h3 id="edit-receipt-title">Edit Receipt</h3>
+        {/* Edit modal (kept unchanged from previous nice layout you accepted) */}
+        {editModalOpen && (
+          <div className="modal-overlay">
+            <div className="modal modal--wide" role="dialog" aria-modal="true" aria-labelledby="edit-receipt-title">
+              <h3 id="edit-receipt-title">Edit Receipt</h3>
 
-      <form className="modal-form-grid" onSubmit={(e) => { e.preventDefault(); handleEditSave(); }}>
-        <label className="field">
-          <span className="field-label">Receipt Date</span>
-          <input type="date" name="receiptDate" value={form.receiptDate} onChange={handleChange} />
-        </label>
+              <form className="modal-form-grid" onSubmit={(e) => { e.preventDefault(); handleEditSave(); }}>
+                <label className="field">
+                  <span className="field-label">Receipt Date</span>
+                  <input type="date" name="receiptDate" value={form.receiptDate} onChange={handleChange} />
+                </label>
 
-        <label className="field">
-          <span className="field-label">Material</span>
-          <select name="materialId" value={form.materialId} onChange={handleChange}>
-            <option value="">Select Material</option>
-            {renderMaterialOptions()}
-          </select>
-        </label>
+                <label className="field">
+                  <span className="field-label">Material</span>
+                  <select name="materialId" value={form.materialId} onChange={handleChange}>
+                    <option value="">Select Material</option>
+                    {renderMaterialOptions()}
+                  </select>
+                </label>
 
-        <label className="field">
-          <span className="field-label">Quantity</span>
-          <input type="number" name="quantity" placeholder="Quantity" value={form.quantity} onChange={handleChange} />
-        </label>
+                <label className="field">
+                  <span className="field-label">Quantity</span>
+                  <input type="number" name="quantity" placeholder="Quantity" value={form.quantity} onChange={handleChange} />
+                </label>
 
-        <label className="field">
-          <span className="field-label">Rate</span>
-          <input type="number" name="rate" placeholder="Rate" value={form.rate} onChange={handleChange} />
-        </label>
+                <label className="field">
+                  <span className="field-label">Rate</span>
+                  <input type="number" name="rate" placeholder="Rate" value={form.rate} onChange={handleChange} />
+                </label>
 
-        <label className="field">
-          <span className="field-label">Amount</span>
-          <input type="number" name="amount" placeholder="Amount" value={form.amount} onChange={handleChange} />
-        </label>
+                <label className="field">
+                  <span className="field-label">Amount</span>
+                  <input type="number" name="amount" placeholder="Amount" value={form.amount} onChange={handleChange} />
+                </label>
 
-        <label className="field">
-          <span className="field-label">Payment Status</span>
-          <select name="paymentStatus" value={form.paymentStatus} onChange={handleChange}>
-            {PAYMENT_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
-          </select>
-        </label>
+                <label className="field">
+                  <span className="field-label">Payment Status</span>
+                  <select name="paymentStatus" value={form.paymentStatus} onChange={handleChange}>
+                    {PAYMENT_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                </label>
 
-        <label className="field">
-          <span className="field-label">Supplier</span>
-          <select name="supplierId" value={form.supplierId} onChange={handleChange}>
-            <option value="">Select Supplier</option>
-            {renderSupplierOptions()}
-          </select>
-        </label>
+                <label className="field">
+                  <span className="field-label">Supplier</span>
+                  <select name="supplierId" value={form.supplierId} onChange={handleChange}>
+                    <option value="">Select Supplier</option>
+                    {renderSupplierOptions()}
+                  </select>
+                </label>
 
-        <label className="field">
-          <span className="field-label">Site</span>
-          <select name="siteId" value={form.siteId} onChange={handleChange}>
-            <option value="">Select Site</option>
-            {renderSiteOptions()}
-          </select>
-        </label>
+                <label className="field">
+                  <span className="field-label">Site</span>
+                  <select name="siteId" value={form.siteId} onChange={handleChange}>
+                    <option value="">Select Site</option>
+                    {renderSiteOptions()}
+                  </select>
+                </label>
 
-        <label className="field textarea-field" style={{ gridColumn: '1 / -1' }}>
-          <span className="field-label">Notes</span>
-          <textarea name="notes" placeholder="Notes" value={form.notes} onChange={handleChange} />
-        </label>
+                <label className="field textarea-field" style={{ gridColumn: '1 / -1' }}>
+                  <span className="field-label">Notes</span>
+                  <textarea name="notes" placeholder="Notes" value={form.notes} onChange={handleChange} />
+                </label>
 
-        <div className="modal-actions" style={{ gridColumn: '1 / -1' }}>
-          <button type="submit" className="btn btn-primary">Save</button>
-          <button type="button" className="btn btn-secondary" onClick={() => { setEditModalOpen(false); setEditing(null); }}>
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-)}
-
+                <div className="modal-actions" style={{ gridColumn: '1 / -1' }}>
+                  <button type="submit" className="btn btn-primary">Save</button>
+                  <button type="button" className="btn btn-secondary" onClick={() => { setEditModalOpen(false); setEditing(null); }}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+        
       </div>
     </>
   );
