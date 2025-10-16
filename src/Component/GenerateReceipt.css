@@ -208,3 +208,126 @@
     width: 100%;
   }
 }
+
+/* Modal overlay -> centered background */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+/* Modal box */
+.modal {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  max-width: 760px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  box-sizing: border-box;
+  color: #222;
+}
+
+/* Slightly wider modal variant */
+.modal--wide {
+  max-width: 820px;
+}
+
+/* Modal heading */
+.modal h3 {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* Grid layout for form fields: two columns */
+.modal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+/* Field wrapper: label above input */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Label text */
+.field-label {
+  font-size: 13px;
+  color: #374151;
+  font-weight: 600;
+}
+
+/* Inputs and selects full width */
+.modal-form-grid input[type="text"],
+.modal-form-grid input[type="number"],
+.modal-form-grid input[type="date"],
+.modal-form-grid select,
+.modal-form-grid textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  box-sizing: border-box;
+  font-size: 14px;
+  background: #fff;
+  color: #111827;
+}
+
+/* Make textarea comfortable and span full width */
+.modal-form-grid textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+/* Action buttons container */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* Button styles */
+.btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background-color: #1e88e5;
+  color: white;
+}
+
+.btn-primary:hover { background-color: #1669b8; }
+
+.btn-secondary {
+  background-color: #e6e6e6;
+  color: #333;
+}
+
+.btn-secondary:hover { background-color: #d2d2d2; }
+
+/* Responsive: single column on narrow screens */
+@media (max-width: 720px) {
+  .modal { padding: 16px; max-width: 720px; }
+  .modal-form-grid { grid-template-columns: 1fr; }
+  .modal--wide { max-width: 100%; }
+  .modal-actions { justify-content: stretch; }
+  .modal-actions .btn { width: 100%; }
+}
+

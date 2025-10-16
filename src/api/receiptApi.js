@@ -28,3 +28,21 @@ export const AddMaterialType = (payload) =>
 
 export const UpdateMaterialType = (payload) =>
   axios.put(`/Material/Update`, payload);
+
+export const FetchReceipts = () =>
+  axios.get(`/Receipt/GetAll`);
+
+export const AddReceipt = (payload) =>
+  axios.post(`/Receipt/Add`, payload);
+
+export const UpdateReceipt = (payload) =>
+  axios.put(`/Receipt/Update`, payload);
+
+// Upload invoice file (image/pdf). Returns { url: 'https://...' }
+export const UploadInvoiceFile = (file) => {
+  const fd = new FormData();
+  fd.append('file', file);
+  return axios.post(`/Receipt/UploadInvoice`, fd, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+};
