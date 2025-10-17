@@ -9,7 +9,9 @@ const ProtectedRouteByRole = ({ allowedRoles }) => {
     return <Navigate to="/login" />;
   }
 
-  if (!allowedRoles.includes(user.role)) {
+  // Admin should always be allowed
+  const isAdmin = (user.role || '').toString().toLowerCase() === 'admin';
+  if (!isAdmin && !allowedRoles.includes(user.role)) {
     return <Navigate to="/unauthorized" />;
   }
 
