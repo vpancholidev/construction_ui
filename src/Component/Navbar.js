@@ -106,6 +106,7 @@ function Navbar() {
   {(isAdmin || allowedPages.has('/sites')) && <li><Link to="/sites" onClick={() => setMenuOpen(false)}>Site Management</Link></li>}
   {(isAdmin || allowedPages.has('/employees')) && <li><Link to="/employees" onClick={() => setMenuOpen(false)}>Employees</Link></li>}
   {(isAdmin || allowedPages.has('/generate-receipt')) && <li><Link to="/generate-receipt" onClick={() => setMenuOpen(false)}>Generate Receipt</Link></li>}
+  {(isAdmin || allowedPages.has('/labour-payments')) && <li><Link to="/labour-payments" onClick={() => setMenuOpen(false)}>Labour Payments</Link></li>}
         <li><Link to="/" onClick={logout}>Logout</Link></li>
       </ul>
     </nav>

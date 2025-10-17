@@ -17,6 +17,7 @@ import SupplierPage from './Pages/SupplierPage'; // path to file
 import MaterialPage from './Component/MaterialPage';
 import ManageRoles from './Pages/ManageRoles';
 import ManagePages from './Pages/ManagePages';
+import LabourPayment from './Pages/LabourPayment';
 function App() {
   return (
     <Router>
@@ -46,6 +47,9 @@ function App() {
             <Route path="/RoleManagement" element={<RoleManagement />} />
             <Route path="/ManageRoles" element={<ManageRoles />} />
             <Route path="/ManagePages" element={<ManagePages />} />
+          </Route>
+          <Route element={<ProtectedRouteByMapping pageKeyword="labour" />}>
+            <Route path="/labour-payments" element={<LabourPayment />} />
           </Route>
           <Route element={<ProtectedRouteByMapping pageKeyword="supplier" />}>
             <Route path="/suppliers/create" element={<SupplierPage />} />

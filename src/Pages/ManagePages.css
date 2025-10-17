@@ -1,12 +1,49 @@
-.page-container { padding: 20px; max-width: 800px; margin: 0 auto; }
+.page-container { padding: 20px; max-width: 1100px; margin: 0 auto; }
 .simple-form { display:flex; gap:8px; margin-bottom:12px; }
 .simple-form input { flex:1; padding:8px; border-radius:6px; border:1px solid #e6edf2 }
 .simple-form button { padding:8px 12px; background:#0b6b66; color:#fff; border:none; border-radius:6px }
-.list { list-style:none; padding-left:0 }
-.list li { background:#f7f9fb; padding:8px; border-radius:6px; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between }
-.list li span { flex:1 }
-.list li button { padding:6px 10px; border-radius:6px; border:none; background:#0b6b66; color:#fff; cursor:pointer }
+
+/* Table list style for pages that render tabular data (LabourPayment) */
+.list { width: 100%; border-collapse: collapse; margin-top: 12px }
+.list thead th { text-align: left; padding: 12px 8px; background: transparent; font-weight:700 }
+.list tbody td { padding: 14px 8px; vertical-align: middle }
+.list tbody tr { border-bottom: 1px solid #eee }
+.list tbody tr:last-child { border-bottom: none }
+.list .actions button { padding:6px 10px; border-radius:6px; border:none; background:#0b6b66; color:#fff; cursor:pointer }
 .btn-secondary { padding:6px 10px; border-radius:6px; border:1px solid #cfdde1; background:#fff; color:#0b6b66; cursor:pointer }
 
+/* Modal styles (match Employee modal design) */
+.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.4);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 999;
+}
+
+.modal {
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	width: 90%;
+	max-width: 700px;
+	box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+}
+
+.modal form { display:flex; flex-direction:column; gap:12px }
+.modal label { font-weight:600; color:#333 }
+.modal input, .modal select, .modal textarea { padding:10px; border:1px solid #ccc; border-radius:6px; width:100% }
+.modal textarea { min-height:80px }
+
+.modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:8px }
+.modal-actions button { padding:8px 14px; border-radius:6px; border:none; cursor:pointer }
+.modal-actions button:first-child { background:#0b6b66; color:#fff }
+.modal-actions button:last-child { background:#f0f0f0; color:#333; border:1px solid #ddd }
+
 /* reuse for ManageRoles page too */
-.simple-form button:hover, .list li button:hover { opacity: 0.95 }
+.simple-form button:hover, .list li button:hover, .modal-actions button:hover { opacity: 0.95 }
