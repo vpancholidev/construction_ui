@@ -14,6 +14,8 @@ import GenerateReceipt from './Component/GenerateReceipt'; // Assuming you have 
 import RoleManagement from './Component/RoleManagement'; // Assuming you have a RoleManagement component
 import SupplierPage from './Pages/SupplierPage'; // path to file
 import MaterialPage from './Component/MaterialPage';
+import ManageRoles from './Pages/ManageRoles';
+import ManagePages from './Pages/ManagePages';
 function App() {
   return (
     <Router>
@@ -37,6 +39,8 @@ function App() {
           <Route path="/sites" element={<SiteManagement />} />
           <Route path="/generate-receipt" element={<GenerateReceipt />} />
           <Route path="/RoleManagement" element={<RoleManagement />} />
+            <Route path="/ManageRoles" element={<ManageRoles />} />
+            <Route path="/ManagePages" element={<ManagePages />} />
           <Route path="/suppliers/create" element={<SupplierPage />} />
           <Route path="/materials/create" element={<MaterialPage />} />
         </Route>

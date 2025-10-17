@@ -1,0 +1,12 @@
+.page-container { padding: 20px; max-width: 800px; margin: 0 auto; }
+.simple-form { display:flex; gap:8px; margin-bottom:12px; }
+.simple-form input { flex:1; padding:8px; border-radius:6px; border:1px solid #e6edf2 }
+.simple-form button { padding:8px 12px; background:#0b6b66; color:#fff; border:none; border-radius:6px }
+.list { list-style:none; padding-left:0 }
+.list li { background:#f7f9fb; padding:8px; border-radius:6px; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between }
+.list li span { flex:1 }
+.list li button { padding:6px 10px; border-radius:6px; border:none; background:#0b6b66; color:#fff; cursor:pointer }
+.btn-secondary { padding:6px 10px; border-radius:6px; border:1px solid #cfdde1; background:#fff; color:#0b6b66; cursor:pointer }
+
+/* reuse for ManageRoles page too */
+.simple-form button:hover, .list li button:hover { opacity: 0.95 }
