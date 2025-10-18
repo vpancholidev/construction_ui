@@ -95,9 +95,9 @@ function SiteTransaction() {
     setEditingTxn(t);
   const siteIdFromT = (t.siteId || t.SiteId || t.siteID || t.SourceId || t.SourceID || t.sourceId || t.SourceType || t.id || '').toString();
 
-    // normalize transaction type to 'DEBIT' or 'CREDIT'
-    let rawType = (t.transactionType || t.TransactionType || '').toString();
-    let txType = rawType.toUpperCase();
+  // normalize transaction type to 'DEBIT' or 'CREDIT' (trim spaces)
+  let rawType = (t.transactionType || t.TransactionType || '').toString().trim();
+  let txType = rawType.toUpperCase();
     if (txType.startsWith('D')) txType = 'DEBIT';
     else if (txType.startsWith('C')) txType = 'CREDIT';
     else txType = 'DEBIT';
@@ -134,8 +134,10 @@ function SiteTransaction() {
     e.preventDefault();
   // client-side validation first (avoid showing loader if invalid)
     try {
-      // client-side validation for required fields
-      if (!txnForm.TransactionType || txnForm.TransactionType.toString().trim() === '') {
+  // client-side validation for required fields
+  // trim and normalize TransactionType here to remove accidental spaces
+  if (txnForm.TransactionType) txnForm.TransactionType = txnForm.TransactionType.toString().trim().toUpperCase();
+  if (!txnForm.TransactionType || txnForm.TransactionType.toString().trim() === '') {
         alert('Transaction Type is required');
         return;
       }
