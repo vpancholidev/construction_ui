@@ -1,16 +1,24 @@
-.page-container { padding: 20px; max-width: 1100px; margin: 0 auto; }
+.page-container { padding: 12px 20px 40px; max-width: 1100px; margin: 0 auto; }
+.page-container .page-header { position: relative; padding-top: 6px; padding-bottom: 12px }
+.page-container .page-header h2 { margin: 0; font-size: 20px; text-align: center; font-weight:700 }
+.page-container .page-header > div { position: absolute; left: 0; top: 6px }
 .simple-form { display:flex; gap:8px; margin-bottom:12px; }
 .simple-form input { flex:1; padding:8px; border-radius:6px; border:1px solid #e6edf2 }
 .simple-form button { padding:8px 12px; background:#0b6b66; color:#fff; border:none; border-radius:6px }
 
 /* Table list style for pages that render tabular data (LabourPayment) */
-.list { width: 100%; border-collapse: collapse; margin-top: 12px }
-.list thead th { text-align: left; padding: 12px 8px; background: transparent; font-weight:700 }
-.list tbody td { padding: 14px 8px; vertical-align: middle }
-.list tbody tr { border-bottom: 1px solid #eee }
+.list { width: 100%; border-collapse: collapse; margin-top: 18px }
+.list table { width: 100%; table-layout: auto }
+.list thead th { text-align: left; padding: 10px 12px; background: transparent; font-weight:700; font-size:13px }
+.list tbody td { padding: 10px 12px; vertical-align: middle; font-size:13px; color:#222 }
+.list tbody tr { border-bottom: 1px solid #f0f0f0 }
 .list tbody tr:last-child { border-bottom: none }
 .list .actions button { padding:6px 10px; border-radius:6px; border:none; background:#0b6b66; color:#fff; cursor:pointer }
 .btn-secondary { padding:6px 10px; border-radius:6px; border:1px solid #cfdde1; background:#fff; color:#0b6b66; cursor:pointer }
+
+/* small common button */
+.btn { background:#0b6b66; color:#fff; border:none; padding:6px 10px; border-radius:6px; cursor:pointer; font-size:13px }
+.btn.small { padding:4px 8px; font-size:12px }
 
 /* Modal styles (match Employee modal design) */
 .modal-overlay {
@@ -27,23 +35,35 @@
 }
 
 .modal {
-	background: white;
-	padding: 20px;
-	border-radius: 10px;
-	width: 90%;
-	max-width: 700px;
-	box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+	background: #fff;
+	padding: 18px 20px;
+	border-radius: 8px;
+	width: 100%;
+	max-width: 640px;
+	box-shadow: 0 10px 30px rgba(0,0,0,0.25);
 }
 
 .modal form { display:flex; flex-direction:column; gap:12px }
-.modal label { font-weight:600; color:#333 }
-.modal input, .modal select, .modal textarea { padding:10px; border:1px solid #ccc; border-radius:6px; width:100% }
-.modal textarea { min-height:80px }
+.modal h3 { margin:0 0 6px 0; font-size:18px }
+.modal label { font-weight:600; color:#222; font-size:13px }
+.modal input, .modal select, .modal textarea { padding:10px 12px; border:1px solid #d8dfe5; border-radius:6px; width:100%; font-size:14px }
+.modal input, .modal select { height:40px }
+.modal textarea { min-height:100px }
 
-.modal-actions { display:flex; justify-content:flex-end; gap:8px; margin-top:8px }
-.modal-actions button { padding:8px 14px; border-radius:6px; border:none; cursor:pointer }
-.modal-actions button:first-child { background:#0b6b66; color:#fff }
-.modal-actions button:last-child { background:#f0f0f0; color:#333; border:1px solid #ddd }
+/* Ensure labels and controls align and inputs take full width */
+.modal form label { display:block; margin-bottom:6px; color:#333; }
+.modal form .field { width:100%; }
+.modal form input, .modal form select, .modal form textarea { box-sizing: border-box; -webkit-box-sizing: border-box; }
+.modal form input[type="date"] { padding-right:40px; }
+.modal form select { appearance: auto; -webkit-appearance: auto; }
+
+/* Small visual tweak: make modal body slightly taller so date calendar doesn't overflow */
+.modal { padding-bottom:18px; }
+
+.modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:12px }
+.modal-actions button { padding:8px 16px; border-radius:6px; border:none; cursor:pointer; min-width:80px }
+.modal-actions button:first-child { background:#0b6b66; color:#fff; font-weight:600 }
+.modal-actions button:last-child { background:#f7f7f7; color:#333; border:1px solid #e6e6e6 }
 
 /* reuse for ManageRoles page too */
 .simple-form button:hover, .list li button:hover, .modal-actions button:hover { opacity: 0.95 }

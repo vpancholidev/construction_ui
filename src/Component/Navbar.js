@@ -55,6 +55,7 @@ function Navbar() {
           if (name.includes('role')) return '/rolemanagement';
           if (name.includes('site')) return '/sites';
           if (name.includes('employee')) return '/employees';
+            if (name.includes('attendance')) return '/attendance';
           if (name.includes('receipt') || name.includes('generate')) return '/generate-receipt';
           if (name.includes('dashboard') || name.includes('home')) return '/home';
           return null;
@@ -107,6 +108,7 @@ function Navbar() {
   {(isAdmin || allowedPages.has('/employees')) && <li><Link to="/employees" onClick={() => setMenuOpen(false)}>Employees</Link></li>}
   {(isAdmin || allowedPages.has('/generate-receipt')) && <li><Link to="/generate-receipt" onClick={() => setMenuOpen(false)}>Generate Receipt</Link></li>}
   {(isAdmin || allowedPages.has('/labour-payments')) && <li><Link to="/labour-payments" onClick={() => setMenuOpen(false)}>Labour Payments</Link></li>}
+  {(isAdmin || allowedPages.has('/attendance')) && <li><Link to="/attendance" onClick={() => setMenuOpen(false)}>Attendance</Link></li>}
         <li><Link to="/" onClick={logout}>Logout</Link></li>
       </ul>
     </nav>
