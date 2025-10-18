@@ -154,7 +154,7 @@ function EmployeeAttendance() {
                     <option key={emp.userid || emp.Userid || emp.UserId} value={emp.userid || emp.Userid || emp.UserId}>{`${emp.firstname || emp.Firstname} ${emp.lastName || emp.Lastname || ''}`}</option>
                   ))}
                 </select>
-                  <div className="field">
+                  {/* <div className="field">
                     <label>Employee</label>
                     <select value={form.EmployeeId} onChange={e => handleChange('EmployeeId', e.target.value)} required>
                       <option value="">-- select --</option>
@@ -162,14 +162,14 @@ function EmployeeAttendance() {
                         <option key={emp.userid || emp.Userid || emp.UserId} value={emp.userid || emp.Userid || emp.UserId}>{`${emp.firstname || emp.Firstname} ${emp.lastName || emp.Lastname || ''}`}</option>
                       ))}
                     </select>
-                  </div>
+                  </div> */}
 
                 <label>Date</label>
                 <input type="date" value={form.AttendanceDate} onChange={e => handleChange('AttendanceDate', e.target.value)} required />
-                  <div className="field">
+                  {/* <div className="field">
                     <label>Date</label>
                     <input type="date" value={form.AttendanceDate} onChange={e => handleChange('AttendanceDate', e.target.value)} required />
-                  </div>
+                  </div> */}
 
                 <label>Status</label>
                 <select value={form.AttendanceStatus} onChange={e => handleChange('AttendanceStatus', e.target.value)}>
@@ -177,21 +177,21 @@ function EmployeeAttendance() {
                   <option>Half</option>
                   <option>Absent</option>
                 </select>
-                  <div className="field">
+                  {/* <div className="field">
                     <label>Status</label>
                     <select value={form.AttendanceStatus} onChange={e => handleChange('AttendanceStatus', e.target.value)}>
                       <option>Full</option>
                       <option>Half</option>
                       <option>Absent</option>
                     </select>
-                  </div>
+                  </div> */}
 
                 <label>Overtime</label>
                 <input type="number" value={form.OvertimeHrs} onChange={e => handleChange('OvertimeHrs', e.target.value)} />
-                  <div className="field">
+                  {/* <div className="field">
                     <label>Overtime</label>
                     <input type="number" value={form.OvertimeHrs} onChange={e => handleChange('OvertimeHrs', e.target.value)} />
-                  </div>
+                  </div> */}
 
                 <label>Site</label>
                 <select value={form.SiteId} onChange={e => handleChange('SiteId', e.target.value)}>
@@ -200,7 +200,7 @@ function EmployeeAttendance() {
                     <option key={s.siteId || s.siteId || s.id} value={s.siteId || s.siteId || s.id}>{s.sitename || s.siteName || s.Sitename}</option>
                   ))}
                 </select>
-                  <div className="field">
+                  {/* <div className="field">
                     <label>Site</label>
                     <select value={form.SiteId} onChange={e => handleChange('SiteId', e.target.value)}>
                       <option value="">-- select --</option>
@@ -208,7 +208,7 @@ function EmployeeAttendance() {
                         <option key={s.siteId || s.siteId || s.id} value={s.siteId || s.siteId || s.id}>{s.sitename || s.siteName || s.Sitename}</option>
                       ))}
                     </select>
-                  </div>
+                  </div> */}
 
                 <div className="modal-actions">
                   <button type="submit" className="btn">{editing ? 'Update' : 'Add'}</button>

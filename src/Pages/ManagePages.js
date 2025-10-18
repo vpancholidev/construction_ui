@@ -66,12 +66,12 @@ export default function ManagePages() {
           <button type="submit">{editing ? 'Update' : 'Add'}</button>
           {editing && <button type="button" className="btn-secondary" onClick={() => { setEditing(null); setPageName(''); }}>Cancel</button>}
         </form>
-        <ul className="list">
+        <ul className="role-list">
           {pages.map(p => (
             <li key={p.pageId || p.pageid || p.id}>
               <span>{p.pageName || p.pagename || p.name}</span>
               <div>
-                <button onClick={() => { setEditing(p.pageId || p.pageid || p.id); setPageName(p.pageName || p.pagename || p.name); }}>Edit</button>
+                <button onClick={() => { setEditing(p.pageId || p.pageid || p.id); setPageName(p.pageName || p.pagename || p.name); }} className="btn small">Edit</button>
               </div>
             </li>
           ))}

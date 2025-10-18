@@ -61,12 +61,12 @@ export default function ManageRoles() {
           <button type="submit">{editing ? 'Update' : 'Add'}</button>
           {editing && <button type="button" className="btn-secondary" onClick={() => { setEditing(null); setRoleName(''); }}>Cancel</button>}
         </form>
-        <ul className="list">
+        <ul className="role-list">
           {roles.map(r => (
             <li key={r.roleid || r.id}>
               <span>{r.rolename}</span>
               <div>
-                <button onClick={() => { setEditing(r.roleid || r.id); setRoleName(r.rolename); }} className="">Edit</button>
+                <button onClick={() => { setEditing(r.roleid || r.id); setRoleName(r.rolename); }} className="btn small">Edit</button>
               </div>
             </li>
           ))}

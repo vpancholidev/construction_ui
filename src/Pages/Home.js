@@ -56,7 +56,7 @@ function Home() {
           <DashboardCard title="Ongoing Projects" count={counts.totalActiveSites ?? 0} color="#388e3c" />
           {/* <DashboardCard title="Completed" count={counts.totalCompletedSites ?? 0} color="#1976d2" /> */}
         {/*  <DashboardCard title="Pending Approvals" count="3" color="#f57c00" /> */}
-          <DashboardCard title="Team Employee" count={counts.totalEmployees ?? 0} color="#7b1fa2" />
+          <DashboardCard title="Total Employees" count={counts.totalEmployees ?? 0} color="#7b1fa2" />
           <DashboardCard title="Total Income" count={(counts.totalIncome ?? 0).toFixed(2)} color="#43a047" />
           <DashboardCard title="Total Expense" count={(counts.totalExpense ?? 0).toFixed(2)} color="#e53935" />
           <DashboardCard title="Labour Paid" count={(counts.totalLabourPaymentPaid ?? 0).toFixed(2)} color="#6d4c41" />
