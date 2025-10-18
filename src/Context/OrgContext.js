@@ -18,7 +18,9 @@ export const OrgProvider = ({ children }) => {
     setUser(user);
     try {
       showLoader();
-      const response = await getDashboardData(user.email);
+  // prefer organisationId when available in token
+  const param = user.organisationId || user.email;
+  const response = await getDashboardData(param);
       setOrgData(response.data);
     } catch (err) {
       console.error('Error loading org data:', err);
