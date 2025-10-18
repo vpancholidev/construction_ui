@@ -19,6 +19,7 @@ import ManageRoles from './Pages/ManageRoles';
 import ManagePages from './Pages/ManagePages';
 import LabourPayment from './Pages/LabourPayment';
 import EmployeeAttendance from './Pages/EmployeeAttendance';
+import SiteTransaction from './Pages/SiteTransaction';
 function App() {
   return (
     <Router>
@@ -51,6 +52,9 @@ function App() {
           </Route>
           <Route element={<ProtectedRouteByMapping pageKeyword="labour" />}>
             <Route path="/labour-payments" element={<LabourPayment />} />
+          </Route>
+          <Route element={<ProtectedRouteByMapping pageKeyword="site" />}>
+            <Route path="/site-transactions" element={<SiteTransaction />} />
           </Route>
           <Route element={<ProtectedRouteByMapping pageKeyword="attendance" />}>
             <Route path="/attendance" element={<EmployeeAttendance />} />

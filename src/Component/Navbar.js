@@ -53,6 +53,8 @@ function Navbar() {
         const routeForPage = (p) => {
           const name = (p.pageName || p.pagename || p.name || '').toString().toLowerCase();
           if (name.includes('role')) return '/rolemanagement';
+          // transactions are a specific sub-area of sites; check before 'site'
+          if (name.includes('transaction')) return '/site-transactions';
           if (name.includes('site')) return '/sites';
           if (name.includes('employee')) return '/employees';
             if (name.includes('attendance')) return '/attendance';
@@ -105,6 +107,7 @@ function Navbar() {
         <li><Link to="/home" onClick={() => setMenuOpen(false)}>Dashboard</Link></li>
   {(isAdmin || allowedPages.has('/rolemanagement')) && <li><Link to="/rolemanagement" onClick={() => setMenuOpen(false)}>Role Management</Link></li>}
   {(isAdmin || allowedPages.has('/sites')) && <li><Link to="/sites" onClick={() => setMenuOpen(false)}>Site Management</Link></li>}
+  {(isAdmin || allowedPages.has('/site-transactions')) && <li><Link to="/site-transactions" onClick={() => setMenuOpen(false)}>Site Transactions</Link></li>}
   {(isAdmin || allowedPages.has('/employees')) && <li><Link to="/employees" onClick={() => setMenuOpen(false)}>Employees</Link></li>}
   {(isAdmin || allowedPages.has('/generate-receipt')) && <li><Link to="/generate-receipt" onClick={() => setMenuOpen(false)}>Generate Receipt</Link></li>}
   {(isAdmin || allowedPages.has('/labour-payments')) && <li><Link to="/labour-payments" onClick={() => setMenuOpen(false)}>Labour Payments</Link></li>}
