@@ -14,6 +14,9 @@ export const addPage = (data) => axios.post(`/Page/AddPage`, data);
 export const updateRole = (data) => axios.put(`/Role/update`, data)
 export const updatePage = (data) => axios.put(`/Page/UpdatePage`, data);
 
+// Update role ranks (drag-and-drop reorder)
+export const updateRoleRanks = (data) => axios.put(`/Role/updateranks`, data);
+
 // Role-Page mappings
 export const getAllRolePageMappings = () => axios.get(`/RolePageMapping/GetAllMapping`);
 export const updateRolePageMapping = (data) => axios.put(`/RolePageMapping/BulkUpdate`, data);

@@ -26,15 +26,88 @@
 .role-list li span { font-size:15px; color:#222; word-break: break-word; flex: 1 }
 .role-list li div { display:flex; gap:8px; margin-left: 12px }
 
-/* Make list items take full container width and stack nicely on small screens */
-@media (max-width: 720px) {
-	.simple-form { flex-direction: column; }
-	.simple-form button { width: 100%; }
-	.role-list li { flex-direction: column; align-items: stretch; gap: 8px }
-	.role-list li div { display:flex; justify-content: flex-end }
+/* Draggable role item styles */
+.role-item-draggable {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 6px;
+  background: #fff;
+  margin-bottom: 12px;
+  border: 1px solid #eef3f4;
+  box-sizing: border-box;
+  cursor: move;
+  transition: all 0.2s ease;
 }
 
-/* Modal styles (match Employee modal design) */
+.role-item-draggable:hover {
+  border-color: #0b6b66;
+  box-shadow: 0 2px 8px rgba(11, 107, 102, 0.1);
+}
+
+.drag-handle {
+  display: flex;
+  align-items: center;
+  margin-right: 12px;
+  color: #999;
+  cursor: grab;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.drag-handle.drag-disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.role-name {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  font-size: 15px;
+  color: #222;
+  word-break: break-word;
+}
+
+.role-rank {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  font-weight: normal;
+}
+
+.role-item-draggable.role-admin-locked {
+  background: #f9f9f9;
+  border-color: #ddd;
+  cursor: default;
+}
+
+.role-locked-badge {
+  font-size: 12px;
+  color: #999;
+  background: #f0f0f0;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.role-item-draggable > div {
+  display: flex;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+/* Make list items take full container width and stack nicely on small screens */
+@media (max-width: 720px) {
+  .simple-form { flex-direction: column; }
+  .simple-form button { width: 100%; }
+  .role-list li { flex-direction: column; align-items: stretch; gap: 8px }
+  .role-list li div { display:flex; justify-content: flex-end }
+  .role-item-draggable { flex-direction: column; align-items: stretch; gap: 8px; }
+  .role-item-draggable > div { justify-content: flex-end; }
+}/* Modal styles (match Employee modal design) */
 .modal-overlay {
 	position: fixed;
 	top: 0;
