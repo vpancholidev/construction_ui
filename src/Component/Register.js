@@ -5,6 +5,7 @@ import './Register.css';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useLoader } from '../Context/LoaderContext';
 
 function OrgRegister() {
   const [OrganisationName, setOrgName] = useState('');
@@ -14,6 +15,7 @@ function OrgRegister() {
   const [City, setCity] = useState('');
   const [Password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { showLoader, hideLoader, loading } = useLoader();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -28,6 +30,7 @@ function OrgRegister() {
     };
 
     try {
+      showLoader();
       const response = await registerOrg(payload);
       if (response.data.success === false) {
         toast.error(response.data.errorMessage || 'Registration failed.');
@@ -37,6 +40,8 @@ function OrgRegister() {
       }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Server error.');
+    } finally {
+      hideLoader();
     }
   };
 
@@ -88,7 +93,7 @@ function OrgRegister() {
           required
           minLength="6"
         />
-        <button type="submit">Register Organization</button>
+  <button type="submit" disabled={loading}>Register Organization</button>
       </form>
       <p>
         Already registered? <Link to="/">Login here</Link>
